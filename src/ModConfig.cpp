@@ -10,7 +10,7 @@ namespace PVP::Config
     auto Settings::deserialize() -> void
     {
         auto working_directory = UE4SSProgram::get_program().get_working_directory();
-        auto main_directory = fs::path(working_directory) / STR("Mods") / STR("YetAnotherPvPFix");
+        auto main_directory = fs::path(working_directory) / STR("Mods") / STR("PalPvP");
         auto file_name = main_directory / STR("PVP-settings.ini");
         if (!fs::exists(main_directory))
         {
@@ -19,7 +19,7 @@ namespace PVP::Config
         
         if (!fs::exists(file_name))
         {
-            throw std::runtime_error{ "[YAPP] PVP-settings.ini could not be found" };
+            throw std::runtime_error{ "[PalPvP] PVP-settings.ini could not be found" };
         }
 
         auto file = File::open(file_name, File::OpenFor::Reading, File::OverwriteExistingFile::No, File::CreateIfNonExistent::Yes);
@@ -40,7 +40,7 @@ namespace PVP::Config
         }
         catch (std::exception& e)
         {
-            Output::send<LogLevel::Error>(STR("[YAPP] {}\n"), RC::to_generic_string(e.what()));
+            Output::send<LogLevel::Error>(STR("[PalPvP] {}\n"), RC::to_generic_string(e.what()));
         }
     }
 }

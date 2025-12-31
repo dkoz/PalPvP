@@ -1,8 +1,8 @@
 #include "SDK/Classes/PalOptionSubsystem.h"
 #include "Unreal/UObjectGlobals.hpp"
-#include "Unreal/UFunction.hpp"
-#include "Unreal/UScriptStruct.hpp"
-#include "Unreal/Property/FStructProperty.hpp"
+#include "Unreal/CoreUObject/UObject/Class.hpp"
+#include "Unreal/CoreUObject/UObject/UnrealType.hpp"
+#include "Unreal/FieldPath.hpp"
 
 using namespace RC;
 using namespace RC::Unreal;
@@ -30,7 +30,7 @@ namespace Palworld {
         void* ParamsBuffer = FMemory::Malloc(Function->GetParmsSize());
         FMemory::Memzero(ParamsBuffer, Function->GetParmsSize());
 
-        for (auto& Property : Function->ForEachPropertyInChain())
+        for (FProperty* Property : TFieldRange<FProperty>(Function, EFieldIterationFlags::Default))
         {
             void* ValuePtr = Property->ContainerPtrToValuePtr<void>(ParamsBuffer);
 

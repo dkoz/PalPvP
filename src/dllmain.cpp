@@ -67,7 +67,7 @@ void BeginScan()
 
     SignatureContainer Dmg_Return_Signature = [=]() -> SignatureContainer {
         return {
-            {{ "84 C0 0F 84 ?? ?? ?? ?? 48 8D 4F D8 E8 ?? ?? ?? ?? 48 8D 4F D8"}},
+            {{ "84 C0 0F 84 ?? ?? ?? ?? 48 8D 4F ?? E8 ?? ?? ?? ?? 48 8D 4F"}},
             [=](SignatureContainer& self) {
                 void* FunctionPointer = static_cast<void*>(self.get_match_address());
 
@@ -105,20 +105,20 @@ bool __stdcall PalUtility_IsPvP(UObject* WorldContextObject)
     return PalUtility_IsPvP_Hook.call<bool>(WorldContextObject);
 }
 
-class YetAnotherPvPFix : public RC::CppUserModBase
+class PalPvP : public RC::CppUserModBase
 {
 public:
-    YetAnotherPvPFix() : CppUserModBase()
+    PalPvP() : CppUserModBase()
     {
-        ModName = STR("YetAnotherPvPFix");
-        ModVersion = STR("1.3.0");
-        ModDescription = STR("Fixes PvP damage not working for both players and buildings and also some other bugs after Crossplay patch.");
-        ModAuthors = STR("Okaetsu");
+        ModName = STR("PalPVP");
+        ModVersion = STR("1.3.5");
+        ModDescription = STR("Fixes PvP damage to players and buildings.");
+        ModAuthors = STR("Okaetsu, Caffeinmodz");
 
         Output::send<LogLevel::Verbose>(STR("{} v{} by {} loaded.\n"), ModName, ModVersion, ModAuthors);
     }
 
-    ~YetAnotherPvPFix() override
+    ~PalPvP() override
     {
     }
 
@@ -186,21 +186,21 @@ public:
                 bEnablePlayerToPlayerDamage->SetPropertyValueInContainer(OptionWorldSettings, true);
                 OptionSubsystem->SetOptionWorldSettings(OptionWorldSettings);
                 OptionSubsystem->ApplyWorldSettings();
-                Output::send<LogLevel::Verbose>(STR("[YAPP] Enabling PvP Damage to Players.\n"));
+                Output::send<LogLevel::Verbose>(STR("[PalPvP] Enabling PvP Damage to Players.\n"));
             }
             else
             {
-                Output::send<LogLevel::Verbose>(STR("[YAPP] Disabling PvP Damage to Players.\n"));
+                Output::send<LogLevel::Verbose>(STR("[PalPvP] Disabling PvP Damage to Players.\n"));
             }
 
             EnablePvPDamageToBuildings = Settings.PVP.EnableBuildingPvPDamage;
             if (EnablePvPDamageToBuildings)
             {
-                Output::send<LogLevel::Verbose>(STR("[YAPP] Enabling PvP Damage to Buildings.\n"));
+                Output::send<LogLevel::Verbose>(STR("[PalPvP] Enabling PvP Damage to Buildings.\n"));
             }
             else
             {
-                Output::send<LogLevel::Verbose>(STR("[YAPP] Disabling PvP Damage to Buildings.\n"));
+                Output::send<LogLevel::Verbose>(STR("[PalPvP] Disabling PvP Damage to Buildings.\n"));
             }
         });
 
@@ -212,15 +212,15 @@ public:
 };
 
 
-#define YETANOTHERPVPFIX_API __declspec(dllexport)
+#define PalPvP_API __declspec(dllexport)
 extern "C"
 {
-    YETANOTHERPVPFIX_API RC::CppUserModBase* start_mod()
+    PalPvP_API RC::CppUserModBase* start_mod()
     {
-        return new YetAnotherPvPFix();
+        return new PalPvP();
     }
 
-    YETANOTHERPVPFIX_API void uninstall_mod(RC::CppUserModBase* mod)
+    PalPvP_API void uninstall_mod(RC::CppUserModBase* mod)
     {
         delete mod;
     }
